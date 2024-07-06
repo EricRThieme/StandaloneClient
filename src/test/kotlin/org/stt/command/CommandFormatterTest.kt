@@ -29,7 +29,6 @@ import java.time.temporal.ChronoField
 import java.time.temporal.ChronoUnit
 import java.util.*
 import javax.inject.Provider
-import kotlin.streams.toList
 
 @RunWith(Theories::class)
 class CommandFormatterTest {
@@ -359,6 +358,43 @@ class CommandFormatterTest {
         assertThat(timeTrackingItems[1]!!.start.toLocalDate()).isEqualTo(LocalDate.of(2014, 6, 22))
     }
 
+    @Theory
+    fun `text from asNewItemCommandText can be parsed and is equal in locale`(locale: Locale) {
+        // GIVEN
+
+        val start = LocalDateTime.of(2024, 1, 22, 12, 0, 0)
+        val stop = LocalDateTime.of(2024, 1, 22, 20, 0, 0)
+        val activity = "test activity"
+
+        // WHEN
+        val actual = executeWithLocale(locale) {
+            val module = CommandModule()
+            val sut = CommandFormatter(
+                module.provideCommandTextParser(), module.provideDateTimeFormatter(), module.provideTimeFormatter()
+            )
+            val commandText = sut.asNewItemCommandText(TimeTrackingItem(activity, start, stop))
+            sut.parse(commandText)
+        }
+
+        // THEN
+        assertThat(actual).isInstanceOf(NewActivity::class.java)
+        val item = (actual as NewActivity).newItem
+        assertThat(item.start).isEqualTo(start)
+        assertThat(item.end).isEqualTo(stop)
+        assertThat(item.activity).isEqualTo(activity)
+
+    }
+
+    private fun <T> executeWithLocale(locale: Locale, action: () -> T): T {
+        val defaultLocale = Locale.getDefault()
+        try {
+            Locale.setDefault(locale)
+            return action()
+        } finally {
+            Locale.setDefault(defaultLocale)
+        }
+    }
+
     private fun executeCommand(command: String): Optional<TimeTrackingItem> {
         val cmdToExec = sut.parse(command)
         val testCommandHandler = TestCommandHandler()
@@ -434,6 +470,15 @@ class CommandFormatterTest {
         @JvmField
         @field:DataPoints
         var hourFormats = arrayOf(hours("test %sh ago"), hours("test %shr ago"), hours("test %s hrs ago"), hours("test\n%shour ago"), hours("test %s hours ago"), hours("left 3 hours ago %s hours ago"))
+
+        @JvmField
+        @field:DataPoints
+        var locales = arrayOf(
+            Locale.UK,
+            // currently not supported due to 12-hour date format with "PM" suffix
+            // Locale.US,
+            Locale.GERMAN
+        )
 
         fun min(command: String): Command {
             return Command(command, "mins")

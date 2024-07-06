@@ -27,7 +27,7 @@ agoFormat returns [int amount] :
 
 date: (NUMBER|DOT|MINUS|SLASH)+;
 
-dateTimeInternal: (NUMBER|DOT|MINUS|SLASH|COLON)+;
+dateTimeInternal: (NUMBER|DOT|MINUS|SLASH|COLON|COMMA)+;
 
 dateTime returns [String text]: txt=dateTimeInternal { $text = $txt.text; };
 
@@ -84,6 +84,7 @@ reportStart returns [LocalDate from_date, LocalDate to_date]:
 // WHEN ADDING TOKENS: ADD THEM to anyToken above!!
 // SYMBOLS
 COLON: ':';
+COMMA: ',';
 DOT: '.';
 MINUS: '-';
 SLASH: '/';
