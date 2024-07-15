@@ -39,7 +39,7 @@ class CommandModule {
     @Named("dateTimeFormatter")
     fun provideDateTimeFormatter(): DateTimeFormatter {
         return DateTimeFormatterBuilder()
-                .appendLocalized(FormatStyle.MEDIUM, FormatStyle.MEDIUM)
+                .appendLocalized(FormatStyle.SHORT, FormatStyle.MEDIUM)
                 .toFormatter()
     }
 
