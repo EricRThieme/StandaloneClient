@@ -1,5 +1,6 @@
 package org.stt.connector.jira
 
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.Test
 import org.stt.config.JiraConfig
 
@@ -10,10 +11,9 @@ internal class JiraClientTest {
   fun testErrorHandlingOfIssueRequest() {
     val jiraConfig = JiraConfig()
     jiraConfig.jiraURI = "https://jira.atlassian.net"
-    try {
+    assertThatThrownBy {
       JiraClient("dummy", null, jiraConfig.jiraURI!!).getIssue("JRA-7")
-    } catch (e: Exception) {
-      assert(e.message.equals("Couldn't find issue JRA-7. Cause: {\"errorMessage\": \"Site temporarily unavailable\"}"))
-    }
+    }.isInstanceOf(IssueDoesNotExistException::class.java)
+      .hasMessageContainingAll("Couldn't find issue JRA-7", "\"errorMessage\": \"Site temporarily unavailable\"")
   }
 }
