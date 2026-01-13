@@ -29,10 +29,16 @@ public class ConfigurationTest {
 		// remove any pre-existing .sttrc in the temp folder to ensure defaults are used
 		File props = new File(currentTempFolder, ".sttrc");
 		if (props.exists()) {
-			props.delete();
+			boolean deleted = props.delete();
+			if (!deleted) {
+				throw new IOException("Could not delete pre-existing .sttrc in temp folder: " + props.getAbsolutePath());
+			}
 		}
 		// create an empty .sttrc so Configuration won't copy the example into HOME
-		props.createNewFile();
+		boolean created = props.createNewFile();
+		if (!created) {
+			throw new IOException("Could not create .sttrc in temp folder: " + props.getAbsolutePath());
+		}
 		// ensure Configuration uses the temporary folder as HOME
 		System.setProperty("user.home", currentTempFolder.getAbsolutePath());
 		// construct Configuration after ensuring no properties file is present
