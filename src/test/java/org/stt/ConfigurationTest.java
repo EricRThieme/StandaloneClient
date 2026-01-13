@@ -25,9 +25,19 @@ public class ConfigurationTest {
 
 	@Before
 	public void setUp() throws IOException {
-		sut = Mockito.spy(new Configuration());
 		currentTempFolder = tempFolder.newFolder();
-		when(sut.determineBaseDir()).thenReturn(currentTempFolder);
+		// remove any pre-existing .sttrc in the temp folder to ensure defaults are used
+		File props = new File(currentTempFolder, ".sttrc");
+		if (props.exists()) {
+			props.delete();
+		}
+		// create an empty .sttrc so Configuration won't copy the example into HOME
+		props.createNewFile();
+		// ensure Configuration uses the temporary folder as HOME
+		System.setProperty("user.home", currentTempFolder.getAbsolutePath());
+		// construct Configuration after ensuring no properties file is present
+		sut = Mockito.spy(new Configuration());
+		org.mockito.Mockito.doReturn(currentTempFolder).when(sut).determineBaseDir();
 	}
 
 	@Test
@@ -38,6 +48,7 @@ public class ConfigurationTest {
 		File sttFile = sut.getSttFile();
 
 		// THEN
+		
 		assertThat(sttFile.getAbsoluteFile(), is(new File(currentTempFolder,
 				".stt").getAbsoluteFile()));
 	}
