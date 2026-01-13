@@ -346,6 +346,28 @@ public class STTApplication implements DeleteActionHandler, EditActionHandler,
 
             Scene scene = new Scene(pane);
 
+            // Add keyboard accelerators so users can open the report view with a shortcut
+            // - ALT+R: matches the mnemonic created from Show _report on Windows
+            // - Shortcut+R: maps to Ctrl+R on Windows and Command+R on macOS
+            scene.getAccelerators().put(
+                    javafx.scene.input.KeyCombination.keyCombination("ALT+R"),
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            showReportWindow();
+                        }
+                    }
+            );
+            scene.getAccelerators().put(
+                    javafx.scene.input.KeyCombination.keyCombination("Shortcut+R"),
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            showReportWindow();
+                        }
+                    }
+            );
+
             stage.setScene(scene);
             stage.setTitle(localization.getString("window.title"));
             Image applicationIcon = new Image("/Logo.png", 32, 32, true, true);

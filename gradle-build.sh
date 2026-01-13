@@ -21,6 +21,9 @@ GRADLE_JAVA_HOME="${ORG_GRADLE_JAVA_HOME:-${JAVA_HOME:-}}"
 
 if [ -n "$GRADLE_JAVA_HOME" ]; then
   echo "Using Gradle Java home: $GRADLE_JAVA_HOME"
+  # Export JAVA_HOME so the gradle wrapper script uses the desired JVM to start the wrapper JVM.
+  # Passing -Dorg.gradle.java.home only affects the JVM Gradle starts, not the wrapper process.
+  export JAVA_HOME="$GRADLE_JAVA_HOME"
   ./gradlew -Dorg.gradle.java.home="$GRADLE_JAVA_HOME" "$@"
 else
   echo "No ORG_GRADLE_JAVA_HOME/JAVA_HOME set; using system java"
