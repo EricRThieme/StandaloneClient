@@ -49,6 +49,13 @@ public class Configuration {
     }
 
     public File determineBaseDir() {
+        String sysHome = System.getProperty("user.home");
+        if (sysHome != null) {
+            File homeDirectory = new File(sysHome);
+            if (homeDirectory.exists()) {
+                return homeDirectory;
+            }
+        }
         String envHOMEVariable = System.getenv("HOME");
         if (envHOMEVariable != null) {
             File homeDirectory = new File(envHOMEVariable);
@@ -84,6 +91,11 @@ public class Configuration {
     public File getSttFile() {
         String sttFileString = getPropertiesReplaced("sttFile", "$HOME$/.stt");
         File sttFile = new File(sttFileString);
+        
+        File parent = sttFile.getParentFile();
+        if (parent != null && !parent.exists() && !parent.mkdirs()) {
+            LOG.log(Level.WARNING, "Could not create parent directory for " + sttFile.getAbsolutePath());
+        }
         try {
             sttFile.createNewFile();
         } catch (IOException e) {
