@@ -359,11 +359,29 @@ public class STTApplication implements DeleteActionHandler, EditActionHandler,
                     }
             );
             scene.getAccelerators().put(
+                    javafx.scene.input.KeyCombination.keyCombination("ALT+I"),
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            insert();
+                        }
+                    }
+            );
+            scene.getAccelerators().put(
                     javafx.scene.input.KeyCombination.keyCombination("Shortcut+R"),
                     new Runnable() {
                         @Override
                         public void run() {
                             showReportWindow();
+                        }
+                    }
+            );
+            scene.getAccelerators().put(
+                    javafx.scene.input.KeyCombination.keyCombination("Shortcut+I"),
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            insert();
                         }
                     }
             );
