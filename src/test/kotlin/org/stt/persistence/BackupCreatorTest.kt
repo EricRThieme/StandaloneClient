@@ -109,7 +109,9 @@ class BackupCreatorTest {
         sut!!.start()
 
         // THEN
-        assertThat(currentSttFile).hasSameContentAs(expectedFile)
+        val currentContent = FileUtils.readFileToString(currentSttFile, StandardCharsets.UTF_8)
+        val expectedContent = FileUtils.readFileToString(expectedFile, StandardCharsets.UTF_8)
+        assertThat(currentContent).isEqualTo(expectedContent)
     }
 
     @Test
@@ -127,7 +129,9 @@ class BackupCreatorTest {
         // THEN
         assertThat(listOf(currentSttFile))
                 .noneSatisfy { file ->
-                    assertThat(file as File).hasSameContentAs(existingFile)
+                    val fileContent = FileUtils.readFileToString(file as File, StandardCharsets.UTF_8)
+                    val existingContent = FileUtils.readFileToString(existingFile, StandardCharsets.UTF_8)
+                    assertThat(fileContent).isEqualTo(existingContent)
                 }
     }
 
