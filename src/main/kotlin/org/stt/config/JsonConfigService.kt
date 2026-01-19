@@ -44,10 +44,16 @@ constructor(@param:Named("homePath") val homePath: String) : ConfigService, Serv
             PasswordSetting.fromEncryptedPassword(Base64.getDecoder().decode(encodedPassword))
         }
 
-        JsoniterSpi.registerTypeEncoder(PathSetting::class.java) { o, s -> s.writeVal((o as PathSetting).path()) }
-        JsoniterSpi.registerTypeEncoder(PasswordSetting::class.java) { o, s -> s.writeVal(Base64.getEncoder().encodeToString((o as PasswordSetting).encodedPassword)) }
+        JsoniterSpi.registerTypeEncoder(PathSetting::class.java) { o, s ->
+            val ps = o as? PathSetting ?: throw IllegalArgumentException("Expected PathSetting for encoder, got ${o?.javaClass}")
+            s.writeVal(ps.path())
+        }
+        JsoniterSpi.registerTypeEncoder(PasswordSetting::class.java) { o, s ->
+            val pw = o as? PasswordSetting ?: throw IllegalArgumentException("Expected PasswordSetting for encoder, got ${o?.javaClass}")
+            s.writeVal(Base64.getEncoder().encodeToString(pw.encodedPassword))
+        }
         JsoniterSpi.registerTypeEncoder(Duration::class.java) { o, s ->
-            val duration = o as Duration
+            val duration = o as? Duration ?: throw IllegalArgumentException("Expected Duration for encoder, got ${o?.javaClass}")
             val asLocalTime = LocalTime.MIDNIGHT.plus(duration)
             s.writeVal(DateTimes.DATE_TIME_FORMATTER_HH_MM_SS.format(asLocalTime))
         }

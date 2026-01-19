@@ -303,14 +303,20 @@ internal constructor(private val localization: ResourceBundle,
     }
 
     private fun addClickToCopy(column: TableColumn<ReportListItem, String>, clickHandler: BiConsumer<ReportListItem, MouseEvent>) {
-        column.setCellFactory { param ->
-            @Suppress("UNCHECKED_CAST") // default factory returns TableCell<ReportListItem, String> at runtime
-            val tableCell = TableColumn.DEFAULT_CELL_FACTORY.call(param) as TableCell<ReportListItem, String>
-            tableCell.setOnMouseClicked { event ->
-                val item = tableCell.tableRow.item ?: return@setOnMouseClicked
-                clickHandler.accept(item, event)
+        column.setCellFactory { _param ->
+            object : TableCell<ReportListItem, String>() {
+                init {
+                    setOnMouseClicked { event ->
+                        val item = this.tableRow?.item ?: return@setOnMouseClicked
+                        clickHandler.accept(item, event)
+                    }
+                }
+
+                override fun updateItem(item: String?, empty: Boolean) {
+                    super.updateItem(item, empty)
+                    text = if (empty || item == null) null else item
+                }
             }
-            tableCell
         }
     }
 
@@ -373,9 +379,9 @@ internal constructor(private val localization: ResourceBundle,
                 if (width > Region.USE_COMPUTED_SIZE) {
                     return super.computePrefHeight(width)
                 }
-                val parent = parent as ActivityTableCell
-                var prefWidth = parent.computePrefWidth(Region.USE_COMPUTED_SIZE)
-                val insets = parent.insets
+                val parentCell = parent as? ActivityTableCell ?: return super.computePrefHeight(width)
+                var prefWidth = parentCell.computePrefWidth(Region.USE_COMPUTED_SIZE)
+                val insets = parentCell.insets
                 // remove deprecated snapSize usage: use precise double arithmetic and ensure non-negative width
                 prefWidth = prefWidth - insets.left - insets.right
                 if (prefWidth < 0.0) prefWidth = 0.0

@@ -99,20 +99,23 @@ constructor(@param:Named("homePath") val homePath: String) : Service, ConfigServ
 
             yamlConstructors[TAG_DURATION] = object : AbstractConstruct() {
                 override fun construct(node: Node): Any {
-                    val durationString = constructScalar(node as ScalarNode) as String
+                    val durationString = constructScalar(node as ScalarNode) as? String
+                        ?: throw ClassCastException("Expected scalar string for !duration, got: ${node.nodeId}")
                     return Duration.between(LocalTime.MIDNIGHT, LocalTime.parse(durationString,
                             DateTimes.DATE_TIME_FORMATTER_HH_MM_SS))
                 }
             }
             yamlConstructors[TAG_PATH] = object : AbstractConstruct() {
                 override fun construct(node: Node): Any {
-                    val path = constructScalar(node as ScalarNode) as String
+                    val path = constructScalar(node as ScalarNode) as? String
+                        ?: throw ClassCastException("Expected scalar string for !path, got: ${node.nodeId}")
                     return PathSetting(path)
                 }
             }
             yamlConstructors[TAG_ENCRYPTED] = object : AbstractConstruct() {
                 override fun construct(node: Node): Any? {
-                    val base64EncryptedPassword = constructScalar(node as ScalarNode) as String
+                    val base64EncryptedPassword = constructScalar(node as ScalarNode) as? String
+                        ?: return null
                     try {
                         return PasswordSetting.fromEncryptedPassword(Base64.getDecoder().decode(base64EncryptedPassword))
                     } catch (e: Exception) {
@@ -129,12 +132,18 @@ constructor(@param:Named("homePath") val homePath: String) : Service, ConfigServ
 
         init {
             representers[Duration::class.java] = Represent { data ->
-                val duration = data as Duration
+                val duration = data as? Duration ?: throw IllegalArgumentException("Expected Duration for representer, got ${data?.javaClass}")
                 val asLocalTime = LocalTime.MIDNIGHT.plus(duration)
                 representScalar(TAG_DURATION, DateTimes.DATE_TIME_FORMATTER_HH_MM_SS.format(asLocalTime))
             }
-            representers[PathSetting::class.java] = Represent { data -> representScalar(TAG_PATH, (data as PathSetting).path()) }
-            representers[PasswordSetting::class.java] = Represent { data -> representScalar(TAG_ENCRYPTED, Base64.getEncoder().encodeToString((data as PasswordSetting).encodedPassword)) }
+            representers[PathSetting::class.java] = Represent { data ->
+                val ps = data as? PathSetting ?: throw IllegalArgumentException("Expected PathSetting for representer, got ${data?.javaClass}")
+                representScalar(TAG_PATH, ps.path())
+            }
+            representers[PasswordSetting::class.java] = Represent { data ->
+                val pw = data as? PasswordSetting ?: throw IllegalArgumentException("Expected PasswordSetting for representer, got ${data?.javaClass}")
+                representScalar(TAG_ENCRYPTED, Base64.getEncoder().encodeToString(pw.encodedPassword))
+            }
             addClassTag(ConfigRoot::class.java, Tag.MAP)
         }
     }

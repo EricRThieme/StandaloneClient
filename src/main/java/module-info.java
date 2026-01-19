@@ -8,7 +8,7 @@ module org.stt {
     requires java.desktop;
 
     requires kotlin.stdlib;
-    requires kotlin.stdlib.jdk7;
+    // removed kotlin.stdlib.jdk7: using kotlin.stdlib (stdlib-jdk8 on the classpath)
     requires jakarta.inject;
     requires dagger;
     requires java.compiler;

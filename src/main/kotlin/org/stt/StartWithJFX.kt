@@ -13,8 +13,8 @@ object StartWithJFX {
             //Class.forName("javafx.embed.swing.JFXPanel")
         } catch (e: ClassNotFoundException) {
             val jfxrt = retrieveJFXRTFile()
-            val systemClassLoader = ClassLoader
-                    .getSystemClassLoader() as URLClassLoader
+            val systemClassLoader = ClassLoader.getSystemClassLoader() as? URLClassLoader
+                ?: throw IllegalStateException("System ClassLoader is not a URLClassLoader; cannot add JFX JAR")
             addUrlToURLClassLoader(jfxrt, systemClassLoader)
         }
 

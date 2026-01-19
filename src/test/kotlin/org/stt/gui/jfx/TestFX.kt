@@ -26,8 +26,8 @@ object TestFX {
             val toolkit = mock(Toolkit::class.java, RETURNS_DEEP_STUBS)
 
             willAnswer { invocation ->
-                val run = invocation.arguments[0] as Runnable
-                run.run()
+                val run = invocation.arguments.getOrNull(0) as? Runnable
+                run?.run()
                 null
             }.given(toolkit).startup(any())
             given(toolkit.primaryTimer).willReturn(object : AbstractPrimaryTimer() {

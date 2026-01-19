@@ -227,10 +227,10 @@ internal constructor(private val sttOptionDialogs: STTOptionDialogs, // NOSONAR
 
         val oneWeekDownBtn = FramelessButton(Glyph.glyph(fontAwesome, Glyph.ANGLE_DOUBLE_DOWN, 20.0))
         oneWeekDownBtn.setOnAction {
-            val virtualFlow = activityList.childrenUnmodifiable[0] as VirtualFlow<*>
+            val virtualFlow = activityList.childrenUnmodifiable.getOrNull(0) as? VirtualFlow<*> ?: return@setOnAction
             val lastVisibleCell = virtualFlow.lastVisibleCell
             var index = lastVisibleCell.index
-            val item = lastVisibleCell.item as TimeTrackingItem
+            val item = lastVisibleCell.item as? TimeTrackingItem ?: return@setOnAction
             val dateOfLastVisibleItem = item.start.toLocalDate()
             while (index < activityList.items.size) {
                 val currentItem = activityList.items[index]
@@ -244,10 +244,10 @@ internal constructor(private val sttOptionDialogs: STTOptionDialogs, // NOSONAR
         Tooltip.install(oneWeekDownBtn, Tooltip(localization.getString("activities.list.weekDown")))
         val oneWeekUpBtn = FramelessButton(Glyph.glyph(fontAwesome, Glyph.ANGLE_DOUBLE_UP, 20.0))
         oneWeekUpBtn.setOnAction {
-            val virtualFlow = activityList.childrenUnmodifiable[0] as VirtualFlow<*>
+            val virtualFlow = activityList.childrenUnmodifiable.getOrNull(0) as? VirtualFlow<*> ?: return@setOnAction
             val lastVisibleCell = virtualFlow.firstVisibleCell
             var index = lastVisibleCell.index
-            val item = lastVisibleCell.item as TimeTrackingItem
+            val item = lastVisibleCell.item as? TimeTrackingItem ?: return@setOnAction
             val dateOfLastVisibleItem = item.start.toLocalDate()
             while (index >= 0) {
                 val currentItem = activityList.items[index]

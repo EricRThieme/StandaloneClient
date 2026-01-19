@@ -46,11 +46,11 @@ class TimeTrackingItem(val activity: String, start: LocalDateTime, end: LocalDat
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as TimeTrackingItem
+        val otherItem = other as? TimeTrackingItem ?: return false
 
-        if (activity != other.activity) return false
-        if (start != other.start) return false
-        if (end != other.end) return false
+        if (activity != otherItem.activity) return false
+        if (start != otherItem.start) return false
+        if (end != otherItem.end) return false
 
         return true
     }

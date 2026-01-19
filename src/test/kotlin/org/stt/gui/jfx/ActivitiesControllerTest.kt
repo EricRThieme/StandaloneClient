@@ -202,7 +202,7 @@ class ActivitiesControllerTest {
 
     private fun givenExecutorService() {
         willAnswer { invocation ->
-            (invocation.arguments[0] as Runnable).run()
+            (invocation.arguments.getOrNull(0) as? Runnable)?.run()
             null
         }.given<ExecutorService>(executorService).execute(ArgumentMatchers.any(Runnable::class.java))
     }
