@@ -69,7 +69,7 @@ dependencies {
     antlr("org.antlr:antlr4:4.13.2")
     implementation("org.antlr:antlr4-runtime:4.13.2")
 
-    implementation("org.fxmisc.richtext:richtextfx:0.11.0") {
+    implementation("org.fxmisc.richtext:richtextfx:0.11.7") {
         exclude(group = "org.openjfx")
     }
     implementation("org.yaml:snakeyaml:2.5")
