@@ -82,8 +82,12 @@ dependencies {
 
 jar {
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-	manifest.attributes("Main-Class":"org.stt.StartWithJFX")
-	manifest.attributes("JavaFX-Feature-Proxy":"None")
+	manifest.attributes(
+		"Main-Class":"org.stt.StartWithJFX",
+		"JavaFX-Feature-Proxy":"None",
+		"Implementation-Title": project.name,
+		"Implementation-Version": project.version
+	)
 }
 
 tasks.withType(FindBugs) {

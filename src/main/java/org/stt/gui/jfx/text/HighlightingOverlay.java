@@ -93,7 +93,9 @@ public class HighlightingOverlay {
             for (int i = 0; i < rectangle.length; i++) {
                 Rectangle rec = new Rectangle();
                 rec.setDisable(true);
-                rec.setBlendMode(BlendMode.SCREEN);
+                rec.setMouseTransparent(true);
+                rec.setBlendMode(null);
+                rec.setOpacity(0.35);
                 rec.setFill(color);
                 rectangle[i] = rec;
             }
@@ -105,10 +107,14 @@ public class HighlightingOverlay {
                 Rectangle2D characterBounds = skin.getCharacterBounds(pos);
                 Point2D point2D = target.localToScene(characterBounds.getMinX(), characterBounds.getMinY());
                 point2D = within.sceneToLocal(point2D);
-                rec.setX(point2D.getX());
-                rec.setY(point2D.getY());
-                rec.setWidth(characterBounds.getWidth());
-                rec.setHeight(characterBounds.getHeight());
+                double x = Math.floor(point2D.getX() + 0.5);
+                double y = Math.floor(point2D.getY() + 0.5);
+                double w = Math.max(1.0, Math.ceil(characterBounds.getWidth()));
+                double h = Math.max(1.0, Math.ceil(characterBounds.getHeight()));
+                rec.setX(x);
+                rec.setY(y);
+                rec.setWidth(w);
+                rec.setHeight(h);
 
                 pos++;
             }

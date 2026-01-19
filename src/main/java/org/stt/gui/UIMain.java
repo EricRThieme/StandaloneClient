@@ -49,6 +49,10 @@ public class UIMain extends Application {
 
     public static void main(String[] args) {
         LOG.info("START");
+        // Ensure Prism pipeline defaults to software rendering unless overridden by JVM property
+        // Force using software pipeline to avoid GPU-related text rendering artefacts on some systems
+        System.setProperty("prism.order", "sw");
+        LOG.info("Set prism.order = sw (forcing software rendering)");
         Application.launch(UIMain.class, args);
     }
 
