@@ -13,5 +13,6 @@ object Matchers {
         return unitialized()
     }
 
-    fun <T> unitialized() = null as T
+    @Suppress("UNCHECKED_CAST")
+    fun <T> unitialized(): T = null as T
 }

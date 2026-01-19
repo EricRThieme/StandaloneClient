@@ -25,7 +25,7 @@ constructor(private val persister: ItemPersister,
             private val queries: TimeTrackingItemQueries,
             publisher: Optional<MBassador<Any>>) : CommandHandler {
 
-    private val publisher: PubSubSupport<Any> = publisher.map { it as PubSubSupport<Any> }.orElseGet { DoNotPublish() }
+    private val publisher: PubSubSupport<Any> = publisher.map { it as? PubSubSupport<Any> ?: DoNotPublish() }.orElseGet { DoNotPublish() }
 
     override fun addNewActivity(command: NewActivity) {
         val newItem = command.newItem

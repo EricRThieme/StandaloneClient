@@ -58,7 +58,7 @@ constructor(@param:Named("homePath") val homePath: String) : Service, ConfigServ
             FileInputStream(sttYaml).use { fileInputStream ->
                 LOG.info("Loading " + sttYaml.name)
                 val yaml = yaml()
-                config = yaml.load<Any>(fileInputStream) as ConfigRoot
+                config = yaml.loadAs(fileInputStream, ConfigRoot::class.java)
             }
         } catch (e: FileNotFoundException) {
             LOG.log(Level.FINEST, "No previous config file found, creating a new one.", e)
