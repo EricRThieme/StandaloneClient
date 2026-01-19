@@ -131,17 +131,21 @@ tasks.withType<org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask> {
 val gitVersion: groovy.lang.Closure<String> by project.extra
 val versionDetails: groovy.lang.Closure<com.palantir.gradle.gitversion.VersionDetails> by extra
 
+// Capture values at configuration time to avoid Task.project access at execution time
+val resolvedAppVersion: String = project.version.toString()
+val resolvedGitHash: String = versionDetails().gitHash
+
 tasks.withType<ProcessResources> {
     filesMatching("version.info") {
         filter<ReplaceTokens>(
             "tokens" to mapOf(
-                "app.version" to project.version,
-                "app.hash" to versionDetails().gitHash
+                "app.version" to resolvedAppVersion,
+                "app.hash" to resolvedGitHash
             )
         )
     }
     doLast {
-        println("Written tokes into file version.info")
+        println("Written tokes into file version.info (version=${resolvedAppVersion})")
     }
 }
 
@@ -153,7 +157,7 @@ task("dist") {
 task("release") {
     dependsOn += "dist"
     doLast {
-        println("Built release for $project.version")
+        println("Built release for ${resolvedAppVersion}")
     }
 }
 
