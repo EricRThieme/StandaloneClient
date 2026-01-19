@@ -77,7 +77,7 @@ dependencies {
     implementation("jakarta.inject:jakarta.inject-api:2.0.1")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
     implementation("net.engio:mbassador:1.3.2")
-    implementation("org.controlsfx:controlsfx:11.1.2")
+    implementation("org.controlsfx:controlsfx:11.2.3")
     implementation("com.jsoniter:jsoniter:0.9.23")
     implementation(kotlin("stdlib-jdk8"))
 
