@@ -9,7 +9,7 @@ module org.stt {
 
     requires kotlin.stdlib;
     requires kotlin.stdlib.jdk7;
-    requires javax.inject;
+    requires jakarta.inject;
     requires dagger;
     requires java.compiler;
     requires mbassador;

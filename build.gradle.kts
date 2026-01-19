@@ -1,12 +1,13 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.jetbrains.kotlin.gradle.internal.KaptTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.javamodularity.moduleplugin.extensions.TestModuleOptions
 import org.gradle.internal.os.OperatingSystem
 
 
 plugins {
-    val kotlinVersion = "1.9.24"
+    val kotlinVersion = "2.2.21"
     application
 
     jacoco
@@ -19,7 +20,7 @@ plugins {
 
     id("org.openjfx.javafxplugin") version "0.1.0"
 
-    id("org.javamodularity.moduleplugin") version "1.8.12"
+    id("org.javamodularity.moduleplugin") version "2.0.0"
     id("org.beryx.jlink") version "3.0.1"
 
     id("com.palantir.git-version") version "2.0.0"
@@ -64,7 +65,7 @@ configurations {
 val spek_version = "2.0.4"
 
 dependencies {
-    val daggerVersion = "2.50" // with dagger 2.52 they introduced an incomplete usage ofjakarta.inject
+    val daggerVersion = "2.58"
     antlr(group = "org.antlr", name = "antlr4", version = "4.9.1")
     implementation(group = "org.antlr", name = "antlr4-runtime", version = "4.9.1")
 
@@ -73,7 +74,7 @@ dependencies {
     }
     implementation("org.yaml:snakeyaml:1.27")
     implementation("com.google.dagger:dagger:$daggerVersion")
-    implementation("javax.inject:javax.inject:1")
+    implementation("jakarta.inject:jakarta.inject-api:2.0.1")
     kapt("com.google.dagger:dagger-compiler:$daggerVersion")
     implementation("net.engio:mbassador:1.3.2")
     implementation("org.controlsfx:controlsfx:11.1.2")
@@ -167,8 +168,10 @@ tasks.withType<AntlrTask> {
     arguments = arguments + "-visitor" + "-long-messages"
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "21"
+tasks.withType<KotlinCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.fromTarget("21"))
+    }
 }
 
 //tasks.named("dependencyUpdates", com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask::class.java).configure {

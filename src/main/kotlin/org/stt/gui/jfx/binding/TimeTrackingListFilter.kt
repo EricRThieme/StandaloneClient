@@ -30,13 +30,13 @@ class TimeTrackingListFilter(private val allItems: ObservableList<TimeTrackingIt
 
     private fun createFilteredList(): List<TimeTrackingItem> {
         val result: List<TimeTrackingItem>
-        val filter = filterProperty.value.toLowerCase()
+        val filter = filterProperty.value.lowercase()
         if (filter.isEmpty()) {
             result = ArrayList(allItems)
         } else {
             val parsed = parseActivityPart(filter)
             var processingStream = allItems.stream()
-                    .filter { item -> item.activity.toLowerCase().contains(parsed ?: filter) }
+                .filter { item -> item.activity.lowercase().contains(parsed ?: filter) }
             if (filterDuplicates) {
                 processingStream = processingStream.filter(Streams.distinctByKey { obj: TimeTrackingItem -> obj.activity })
             }
