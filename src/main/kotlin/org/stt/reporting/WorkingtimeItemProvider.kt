@@ -18,7 +18,7 @@ import javax.inject.Named
  */
 class WorkingtimeItemProvider @Inject
 constructor(private val config: WorktimeConfig,
-            @Named("homePath") homePath: String) {
+            @param:Named("homePath") val homePath: String) {
     private val workingHoursPerDay = HashMap<LocalDate, WorkingtimeItem>()
 
     /**

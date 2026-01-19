@@ -25,9 +25,9 @@ import javax.inject.Named
 class InfoController @Inject
 constructor(private val localization: ResourceBundle,
             private val updateChecker: UpdateChecker,
-            @Named("glyph") private val fontAwesome: Font,
-            @Named("version") private val appVersion: String,
-            @Named("commit hash") private val commitHash: String,
+            @param:Named("glyph") private val fontAwesome: Font,
+            @param:Named("version") private val appVersion: String,
+            @param:Named("commit hash") private val commitHash: String,
             private val executorService: ExecutorService) {
     private var panel: BorderPane? = null
 

@@ -15,8 +15,8 @@ import javax.inject.Singleton
  */
 @Singleton
 class STTItemPersister @Inject
-constructor(@STTFile val readerProvider: Provider<Reader>,
-            @STTFile val writerProvider: Provider<Writer>) : ItemPersister {
+constructor(@param:STTFile val readerProvider: Provider<Reader>,
+            @param:STTFile val writerProvider: Provider<Writer>) : ItemPersister {
 
     private val converter = STTItemConverter()
 

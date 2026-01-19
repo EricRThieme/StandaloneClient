@@ -18,7 +18,7 @@ import javax.inject.Named
  * Created by dante on 20.03.15.
  */
 class ItemLogService @Inject
-constructor(@Named("itemLog") val out: PrintWriter,
+constructor(@param:Named("itemLog") val out: PrintWriter,
             val eventBus: MBassador<Any>,
             val formatter: CommandFormatter) : Service {
 

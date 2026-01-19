@@ -13,8 +13,8 @@ import javax.inject.Named
 
 class STTOptionDialogs @Inject
 constructor(private val localization: ResourceBundle,
-            @Named("glyph") private val glyphFont: javafx.scene.text.Font,
-            @Named("activityToText") private val labelToNodeMapper: @JvmSuppressWildcards ActivityTextDisplayProcessor) {
+            @param:Named("glyph") private val glyphFont: javafx.scene.text.Font,
+            @param:Named("activityToText") private val labelToNodeMapper: @JvmSuppressWildcards ActivityTextDisplayProcessor) {
 
     internal fun showDeleteOrKeepDialog(item: TimeTrackingItem): Result {
         val dialog = Dialog<Result>()

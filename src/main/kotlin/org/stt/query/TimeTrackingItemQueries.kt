@@ -101,14 +101,14 @@ class TimeTrackingItemQueries @Inject constructor(private val provider: Provider
 }
 
 class Cache<T>(private val updater: () -> T) {
-    private var value: Any? = null
+    private var value: T? = null
     private var cached = false
 
     operator fun getValue(thisRef: Any, property: KProperty<*>): T {
-        if (cached) return value as T
+        if (cached) return value!!
         value = updater()
         cached = true
-        return value as T
+        return value!!
     }
 
     fun clear() {

@@ -27,7 +27,7 @@ import javax.inject.Singleton
 
 @Singleton
 class YamlConfigService @Inject
-constructor(@Named("homePath") homePath: String) : Service, ConfigService {
+constructor(@param:Named("homePath") val homePath: String) : Service, ConfigService {
     private val sttYaml: File = File("$homePath/.stt", "stt.yaml")
     override lateinit var config: ConfigRoot
         private set

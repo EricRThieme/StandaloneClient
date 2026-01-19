@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class UpdateChecker @Inject
-constructor(@Named("version") val appVersion: String, @Named("release url") val projectURL: URL) {
+constructor(@param:Named("version") val appVersion: String, @param:Named("release url") val projectURL: URL) {
     fun queryNewerVersion(): CompletionStage<String?> {
         return CompletableFuture.supplyAsync<String> {
             projectURL.openStream().use { stream -> stream.bufferedReader().readText() }

@@ -21,7 +21,7 @@ import javax.inject.Singleton
 
 @Singleton
 class JsonConfigService @Inject
-constructor(@Named("homePath") homePath: String) : ConfigService, Service {
+constructor(@param:Named("homePath") val homePath: String) : ConfigService, Service {
     private val sttJson: File = File("$homePath/.stt", "stt.json")
     override lateinit var config: ConfigRoot
     var isNewConfig: Boolean = false
