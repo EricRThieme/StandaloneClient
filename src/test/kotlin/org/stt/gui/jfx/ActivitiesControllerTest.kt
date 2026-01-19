@@ -5,6 +5,7 @@ import net.engio.mbassy.bus.MBassador
 import net.engio.mbassy.listener.Handler
 import org.assertj.core.api.Assertions.assertThat
 import org.fxmisc.richtext.StyleClassedTextArea
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers
@@ -36,6 +37,7 @@ import java.util.stream.Stream
 class ActivitiesControllerTest {
 
     private lateinit var sut: ActivitiesController
+    private var closeable: AutoCloseable? = null
     @Mock
     private lateinit var commandFormatter: CommandFormatter
     @Mock
@@ -55,7 +57,7 @@ class ActivitiesControllerTest {
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        closeable = MockitoAnnotations.openMocks(this)
         TestFX.installTK()
         fontAwesome = Font.getDefault()
 
@@ -75,6 +77,11 @@ class ActivitiesControllerTest {
                 timeTrackingItemQueries, executorService, commandHandler, fontAwesome,
                 worktimePane, labelToNodeMapper, CommandHighlighter.Factory({ emptyList() }))
         sut.commandText = StyleClassedTextArea()
+    }
+
+    @After
+    fun tearDown() {
+        closeable?.close()
     }
 
     @Test

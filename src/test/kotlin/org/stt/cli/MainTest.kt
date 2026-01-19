@@ -2,6 +2,7 @@ package org.stt.cli
 
 import org.apache.commons.io.IOUtils
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -27,6 +28,7 @@ import javax.inject.Provider
 
 class MainTest {
     private var sut: Main? = null
+    private var closeable: AutoCloseable? = null
 
     @field:Rule
     @JvmField
@@ -36,7 +38,7 @@ class MainTest {
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        closeable = MockitoAnnotations.openMocks(this)
 
         val configRoot = ConfigRoot()
 
@@ -73,6 +75,11 @@ class MainTest {
         val commandFormatter = CommandFormatter(CommandTextParser(listOf(timeFormatter, dateTimeFormatter)), dateTimeFormatter, timeFormatter)
         val activities = Activities(persister, queries, Optional.empty())
         sut = Main(queries, reportPrinter, commandFormatter, activities)
+    }
+
+    @After
+    fun tearDown() {
+        closeable?.close()
     }
 
     @Test

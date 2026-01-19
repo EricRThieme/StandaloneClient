@@ -1,6 +1,7 @@
 package org.stt.query
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.experimental.theories.Theories
@@ -30,10 +31,17 @@ class TimeTrackingItemQueriesTest {
     private lateinit var reader: ItemReader
     private lateinit var sut: TimeTrackingItemQueries
 
+    private var closeable: AutoCloseable? = null
+
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        closeable = MockitoAnnotations.openMocks(this)
         sut = TimeTrackingItemQueries(Provider { reader }, Optional.empty())
+    }
+
+    @After
+    fun tearDown() {
+        closeable?.close()
     }
 
     @Test

@@ -13,6 +13,8 @@ import java.util.*
 
 class JiraExpansionProviderTest {
 
+    private var closeable: AutoCloseable? = null
+
     @Mock
     internal lateinit var jiraConnector: JiraConnector
 
@@ -21,7 +23,7 @@ class JiraExpansionProviderTest {
 
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
+        closeable = MockitoAnnotations.openMocks(this)
 
         given(jiraConnector.getIssue("JRA-7")).willReturn(issue)
         given(issue.summary).willReturn("Testing Issue")
@@ -29,6 +31,7 @@ class JiraExpansionProviderTest {
 
     @After
     fun tearDown() {
+        closeable?.close()
     }
 
     @Test

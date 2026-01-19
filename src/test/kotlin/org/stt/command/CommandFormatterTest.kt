@@ -2,6 +2,7 @@ package org.stt.command
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assume
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -41,10 +42,11 @@ class CommandFormatterTest {
 
     private lateinit var itemWriter: STTItemPersister
     private lateinit var activities: Activities
+    private var closeable: AutoCloseable? = null
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        closeable = MockitoAnnotations.openMocks(this)
         val tempFile = tempFolder.newFile()
         val readerSupplier = Provider {
             InputStreamReader(FileInputStream(tempFile), StandardCharsets.UTF_8)

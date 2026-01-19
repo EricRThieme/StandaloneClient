@@ -1,6 +1,7 @@
 package org.stt.reporting
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
@@ -30,12 +31,14 @@ class OvertimeReportGeneratorTest {
     @Mock
     private lateinit var workingtimeItemProvider: WorkingtimeItemProvider
 
+    private var closeable: AutoCloseable? = null
+
     private lateinit var sut: OvertimeReportGenerator
     private lateinit var queries: TimeTrackingItemQueries
 
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
+        closeable = MockitoAnnotations.openMocks(this)
 
         given(categorizer.getCategory(anyString())).willReturn(
                 ItemCategory.WORKTIME)
@@ -45,6 +48,11 @@ class OvertimeReportGeneratorTest {
 
         sut = OvertimeReportGenerator(queries, categorizer,
                 workingtimeItemProvider)
+    }
+
+    @After
+    fun tearDown() {
+        closeable?.close()
     }
 
     @Test

@@ -1,5 +1,6 @@
 package org.stt.command
 
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.BDDMockito.given
@@ -17,6 +18,7 @@ import java.util.stream.Stream
 
 class ActivitiesTest {
     private var sut: Activities? = null
+    private var closeable: AutoCloseable? = null
     @Mock
     private lateinit var persister: ItemPersister
     @Mock
@@ -24,7 +26,7 @@ class ActivitiesTest {
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        closeable = MockitoAnnotations.openMocks(this)
         sut = Activities(persister, queries, Optional.empty())
     }
 

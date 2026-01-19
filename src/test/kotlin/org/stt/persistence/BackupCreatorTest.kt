@@ -3,6 +3,7 @@ package org.stt.persistence
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.FileFileFilter
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -17,6 +18,7 @@ import java.nio.charset.StandardCharsets
 import java.time.LocalDate
 
 class BackupCreatorTest {
+    private var closeable: AutoCloseable? = null
 
     @field:Rule
     @JvmField
@@ -32,7 +34,7 @@ class BackupCreatorTest {
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        closeable = MockitoAnnotations.openMocks(this)
 
         currentTempFolder = tempFolder.newFolder()
         currentSttFile = tempFolder.newFile()
@@ -42,6 +44,11 @@ class BackupCreatorTest {
         backupConfig.backupLocation = PathSetting(currentTempFolder!!.absolutePath)
 
         sut = BackupCreator(backupConfig, currentSttFile, "")
+    }
+
+    @After
+    fun tearDown() {
+        closeable?.close()
     }
 
     @Test

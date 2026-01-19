@@ -2,6 +2,7 @@ package org.stt.reporting
 
 import org.apache.commons.io.FileUtils
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -18,6 +19,7 @@ import java.time.LocalDate
 class WorkingtimeItemProviderTest {
 
     private var sut: WorkingtimeItemProvider? = null
+    private var closeable: AutoCloseable? = null
 
     private val configuration = WorktimeConfig()
 
@@ -27,7 +29,7 @@ class WorkingtimeItemProviderTest {
 
     @Before
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
+        closeable = MockitoAnnotations.openMocks(this)
 
         val tempFile = tempFolder.newFile()
 
@@ -39,6 +41,11 @@ class WorkingtimeItemProviderTest {
         configuration.workingTimesFile = PathSetting(tempFile.absolutePath)
 
         sut = WorkingtimeItemProvider(configuration, "")
+    }
+
+    @After
+    fun tearDown() {
+        closeable?.close()
     }
 
     @Test

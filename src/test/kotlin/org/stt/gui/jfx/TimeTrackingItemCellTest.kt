@@ -1,6 +1,7 @@
 package org.stt.gui.jfx
 
 import javafx.scene.text.Font
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -15,6 +16,7 @@ import java.util.function.Predicate
 class TimeTrackingItemCellTest {
 
     private var sut: TimeTrackingItemCellWithActions? = null
+    private var closeable: AutoCloseable? = null
     @Mock
     private val actionsHandler: ActionsHandler? = null
     private var fontAwesome: Font? = null
@@ -23,11 +25,16 @@ class TimeTrackingItemCellTest {
     fun setup() {
         TestFX.installTK()
         fontAwesome = Font.loadFont(javaClass.getResourceAsStream("/fontawesome-webfont.ttf"), 0.0)
-        MockitoAnnotations.initMocks(this)
+        closeable = MockitoAnnotations.openMocks(this)
         val resourceBundle = ResourceBundle
                 .getBundle("org.stt.gui.Application")
 
         sut = TimeTrackingItemCellWithActions(fontAwesome!!, resourceBundle, Predicate { false }, actionsHandler!!, { it })
+    }
+
+    @After
+    fun tearDown() {
+        closeable?.close()
     }
 
     @Test

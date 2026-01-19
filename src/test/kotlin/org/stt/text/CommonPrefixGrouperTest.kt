@@ -1,6 +1,7 @@
 package org.stt.text
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.BDDMockito.given
@@ -15,15 +16,21 @@ import java.util.stream.Stream
 import kotlin.streams.toList
 
 class CommonPrefixGrouperTest {
+    private var closeable: AutoCloseable? = null
     @Mock
     private lateinit var queries: TimeTrackingItemQueries
     private lateinit var sut: CommonPrefixGrouper
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        closeable = MockitoAnnotations.openMocks(this)
 
         sut = CommonPrefixGrouper(queries, ConfigRoot().prefixGrouper)
+    }
+
+    @After
+    fun tearDown() {
+        closeable?.close()
     }
 
     @Test

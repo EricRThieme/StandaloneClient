@@ -1,6 +1,7 @@
 package org.stt.cli
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
@@ -45,9 +46,11 @@ class ReportPrinterTest {
     @Mock
     private lateinit var rounder: DurationRounder
 
+        private var closeable: AutoCloseable? = null
+
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+                closeable = MockitoAnnotations.openMocks(this)
 
         given(workingtimeItemProvider.getWorkingTimeFor(any()))
                 .willReturn(WorkingtimeItemProvider.WorkingtimeItem(Duration.ofHours(8), Duration.ofHours(8)))
@@ -59,6 +62,11 @@ class ReportPrinterTest {
         sut = ReportPrinter(TimeTrackingItemQueries(readFrom, Optional.empty()), configuration,
                 workingtimeItemProvider, categorizer, rounder)
     }
+
+        @After
+        fun tearDown() {
+                closeable?.close()
+        }
 
     @Test
     fun shouldReportCurrentDayOnNoOptions() {
