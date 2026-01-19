@@ -5,25 +5,19 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.javamodularity.moduleplugin.extensions.TestModuleOptions
 import org.gradle.internal.os.OperatingSystem
 
-
 plugins {
-    val kotlinVersion = "2.2.21"
     application
-
     jacoco
     idea
     antlr
-    kotlin("jvm") version kotlinVersion
-    kotlin("kapt") version kotlinVersion
-    id("org.sonarqube") version "7.2.2.6593"
-    id("com.github.ben-manes.versions") version "0.53.0"
-
-    id("org.openjfx.javafxplugin") version "0.1.0"
-
-    id("org.javamodularity.moduleplugin") version "2.0.0"
-    id("org.beryx.jlink") version "3.1.5"
-
-    id("com.palantir.git-version") version "4.2.0"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.sonarqube)
+    alias(libs.plugins.versions)
+    alias(libs.plugins.javafx)
+    alias(libs.plugins.moduleplugin)
+    alias(libs.plugins.jlink)
+    alias(libs.plugins.git.version)
 }
 
 repositories {
@@ -52,40 +46,40 @@ java {
     sourceCompatibility = JavaVersion.VERSION_21
 }
 
-    java {
-        // workaround, to make kapt created classes available to java module source set
-        sourceSets {
-            main {
-                java {
-                    srcDir(layout.buildDirectory.dir("generated/source/kapt/main"))
-                }
+java {
+    // workaround, to make kapt created classes available to java module source set
+    sourceSets {
+        main {
+            java {
+                srcDir(layout.buildDirectory.dir("generated/source/kapt/main"))
             }
         }
     }
-val spek_version = "2.0.4"
+}
 
 dependencies {
-    val daggerVersion = "2.58"
-    antlr("org.antlr:antlr4:4.13.2")
-    implementation("org.antlr:antlr4-runtime:4.13.2")
+    antlr(libs.antlr.tool)
+    implementation(libs.antlr.runtime)
 
-    implementation("org.fxmisc.richtext:richtextfx:0.11.7") {
+    implementation(libs.richtextfx) {
         exclude(group = "org.openjfx")
     }
-    implementation("org.yaml:snakeyaml:2.5")
-    implementation("com.google.dagger:dagger:$daggerVersion")
-    implementation("jakarta.inject:jakarta.inject-api:2.0.1")
-    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
-    implementation("net.engio:mbassador:1.3.2")
-    implementation("org.controlsfx:controlsfx:11.2.3")
-    implementation("com.jsoniter:jsoniter:0.9.23")
-    implementation(kotlin("stdlib-jdk8"))
+    implementation(libs.snakeyaml)
+    implementation(libs.dagger)
+    implementation(libs.jakarta.inject)
+    kapt(libs.dagger.compiler)
+    implementation(libs.mbassador)
+    implementation(libs.controlsfx)
+    implementation(libs.jsoniter)
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlin.scripting)
+    implementation(libs.kotlin.annotation.processing)
 
-    testImplementation("commons-io:commons-io:2.21.0")
-    testImplementation("org.mockito:mockito-core:5.21.0")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:6.2.1")
-    testImplementation("org.assertj:assertj-core:3.27.6")
-    testImplementation("junit:junit-dep:4.11")
+    testImplementation(libs.commons.io)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.assertj)
+    testImplementation(libs.junit.dep)
 }
 
 javafx {
@@ -110,9 +104,9 @@ tasks.compileJava {
     // workaround, to make kapt created classes available to java module source set
     sourceSets {
         main {
-                java {
-                    srcDir(layout.buildDirectory.dir("generated/source/kapt/main").get().asFile)
-                }
+            java {
+                srcDir(layout.buildDirectory.dir("generated/source/kapt/main").get().asFile)
+            }
         }
     }
 }
@@ -127,6 +121,7 @@ tasks.test {
 tasks.withType<org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask> {
     dependsOn(tasks.withType<AntlrTask>())
 }
+
 // provided by plugin: com.palantir.git-version
 val gitVersion: groovy.lang.Closure<String> by project.extra
 val versionDetails: groovy.lang.Closure<com.palantir.gradle.gitversion.VersionDetails> by extra
@@ -230,4 +225,3 @@ jlink {
         }
     }
 }
-
