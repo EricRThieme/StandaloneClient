@@ -15,7 +15,7 @@ plugins {
     antlr
     kotlin("jvm") version kotlinVersion
     kotlin("kapt") version kotlinVersion
-    id("org.sonarqube") version "5.1.0.4882"
+    id("org.sonarqube") version "7.2.2.6593"
     id("com.github.ben-manes.versions") version "0.53.0"
 
     id("org.openjfx.javafxplugin") version "0.1.0"
