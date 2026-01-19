@@ -23,7 +23,7 @@ plugins {
     id("org.javamodularity.moduleplugin") version "2.0.0"
     id("org.beryx.jlink") version "3.0.1"
 
-    id("com.palantir.git-version") version "2.0.0"
+    id("com.palantir.git-version") version "4.2.0"
 }
 
 repositories {
