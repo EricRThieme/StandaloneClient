@@ -66,8 +66,8 @@ val spek_version = "2.0.4"
 
 dependencies {
     val daggerVersion = "2.58"
-    antlr("org.antlr:antlr4:4.9.1")
-    implementation("org.antlr:antlr4-runtime:4.9.1")
+    antlr("org.antlr:antlr4:4.13.2")
+    implementation("org.antlr:antlr4-runtime:4.13.2")
 
     implementation("org.fxmisc.richtext:richtextfx:0.11.0") {
         exclude(group = "org.openjfx")
