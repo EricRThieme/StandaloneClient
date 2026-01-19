@@ -43,7 +43,10 @@ application {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(25))
+    }
+    sourceCompatibility = JavaVersion.toVersion(25)
 }
 
 java {
@@ -168,7 +171,7 @@ tasks.withType<AntlrTask> {
 
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
-        jvmTarget.set(JvmTarget.fromTarget("21"))
+        jvmTarget.set(JvmTarget.fromTarget("25"))
     }
 }
 
