@@ -7,6 +7,7 @@ import org.stt.config.ConfigRoot
 import org.stt.persistence.stt.STTFile
 import java.io.*
 import java.net.MalformedURLException
+import java.net.URI
 import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.util.*
@@ -112,7 +113,10 @@ class BaseModule {
     @Named("release url")
     fun provideReleaseURL(@Named("applicationMetadata") applicationMetadata: Properties) =
             try {
-                URL(applicationMetadata.getProperty("release.url"))
+                val urlString = applicationMetadata.getProperty("release.url")
+                URI.create(urlString).toURL()
+            } catch (e: IllegalArgumentException) {
+                throw IllegalArgumentException("Invalid release.url value in application metadata", e)
             } catch (e: MalformedURLException) {
                 throw UncheckedIOException(e)
             }

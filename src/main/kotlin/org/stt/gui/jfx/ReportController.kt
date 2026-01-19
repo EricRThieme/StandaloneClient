@@ -376,8 +376,9 @@ internal constructor(private val localization: ResourceBundle,
                 val parent = parent as ActivityTableCell
                 var prefWidth = parent.computePrefWidth(Region.USE_COMPUTED_SIZE)
                 val insets = parent.insets
-                // See javafx.scene.control.Control.layoutChildren()
-                prefWidth = snapSize(prefWidth) - snapSize(insets.left) - snapSize(insets.right)
+                // remove deprecated snapSize usage: use precise double arithmetic and ensure non-negative width
+                prefWidth = prefWidth - insets.left - insets.right
+                if (prefWidth < 0.0) prefWidth = 0.0
                 return super.computePrefHeight(prefWidth)
             }
         }
