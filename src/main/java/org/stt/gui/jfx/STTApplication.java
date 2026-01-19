@@ -387,7 +387,16 @@ public class STTApplication implements DeleteActionHandler, EditActionHandler,
             );
 
             stage.setScene(scene);
-            stage.setTitle(localization.getString("window.title"));
+            String appTitle = localization.getString("window.title");
+            String implVersion = getClass().getPackage().getImplementationVersion();
+            if (implVersion == null || implVersion.isEmpty()) {
+                // fallback: try reading Implementation-Version from manifest via main class
+                implVersion = STTApplication.class.getPackage().getImplementationVersion();
+            }
+            if (implVersion == null || implVersion.isEmpty()) {
+                implVersion = "(dev)";
+            }
+            stage.setTitle(appTitle + " " + implVersion);
             Image applicationIcon = new Image("/Logo.png", 32, 32, true, true);
             stage.getIcons().add(applicationIcon);
 
