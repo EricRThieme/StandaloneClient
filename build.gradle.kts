@@ -81,7 +81,7 @@ dependencies {
     implementation("com.jsoniter:jsoniter:0.9.23")
     implementation(kotlin("stdlib-jdk8"))
 
-    testImplementation("commons-io:commons-io:2.8.0")
+    testImplementation("commons-io:commons-io:2.21.0")
     testImplementation("org.mockito:mockito-core:5.12.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
     testImplementation("org.assertj:assertj-core:3.26.3")
