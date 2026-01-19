@@ -43,14 +43,13 @@ class SummingReportGenerator(
                 val start = item.start
                 val end = item.end ?: now
 
-                if (lastItem != null) {
-                    val endOfLastItem = lastItem!!.end ?: now
+                lastItem?.let { li ->
+                    val endOfLastItem = li.end ?: now
                     if (endOfLastItem.isBefore(start)) {
                         val additionalUncoveredTime = Duration.between(
                             endOfLastItem, start
                         )
-                        uncoveredDuration = uncoveredDuration
-                            .plus(additionalUncoveredTime)
+                        uncoveredDuration = uncoveredDuration.plus(additionalUncoveredTime)
                     }
                 }
 
