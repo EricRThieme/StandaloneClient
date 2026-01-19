@@ -380,7 +380,7 @@ class CommandFormatterTest {
 
         // THEN
         assertThat(actual).isInstanceOf(NewActivity::class.java)
-        if (actual !is NewActivity) throw AssertionError("Expected NewActivity but got: ${actual?.javaClass}")
+        if (actual !is NewActivity) throw AssertionError("Expected NewActivity but got: ${(actual as Any?)?.javaClass}")
         val item = actual.newItem
         assertThat(item.start).isEqualTo(start)
         assertThat(item.end).isEqualTo(stop)
