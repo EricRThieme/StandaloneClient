@@ -5,6 +5,7 @@ import org.stt.time.DateTimes
 import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.DumperOptions.FlowStyle
 import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.LoaderOptions
 import org.yaml.snakeyaml.constructor.AbstractConstruct
 import org.yaml.snakeyaml.constructor.Constructor
 import org.yaml.snakeyaml.introspector.PropertyUtils
@@ -37,8 +38,6 @@ constructor(@param:Named("homePath") val homePath: String) : Service, ConfigServ
         try {
             FileOutputStream(sttYaml).use { out ->
                 OutputStreamWriter(out, StandardCharsets.UTF_8).use { writer ->
-                    val options = DumperOptions()
-                    options.defaultFlowStyle = FlowStyle.BLOCK
                     yaml().dump(config, writer)
                 }
             }
@@ -77,7 +76,10 @@ constructor(@param:Named("homePath") val homePath: String) : Service, ConfigServ
     }
 
     private fun yaml(): Yaml {
-        return Yaml(MyConstructor(), MyRepresenter())
+        val loaderOptions = LoaderOptions()
+        val dumperOptions = DumperOptions()
+        dumperOptions.defaultFlowStyle = FlowStyle.BLOCK
+        return Yaml(MyConstructor(loaderOptions), MyRepresenter(dumperOptions), dumperOptions, loaderOptions)
     }
 
     private fun createNewConfig() {
@@ -90,7 +92,7 @@ constructor(@param:Named("homePath") val homePath: String) : Service, ConfigServ
         writeConfig()
     }
 
-    private class MyConstructor : Constructor(ConfigRoot::class.java) {
+    private class MyConstructor(loaderOptions: LoaderOptions) : Constructor(ConfigRoot::class.java, loaderOptions) {
         init {
 
             val propertyUtils = PropertyUtils()
@@ -128,7 +130,7 @@ constructor(@param:Named("homePath") val homePath: String) : Service, ConfigServ
         }
     }
 
-    private class MyRepresenter internal constructor() : Representer() {
+    private class MyRepresenter internal constructor(dumperOptions: DumperOptions) : Representer(dumperOptions) {
 
         init {
             representers[Duration::class.java] = Represent { data ->
