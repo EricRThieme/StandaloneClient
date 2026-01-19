@@ -2,6 +2,7 @@ package org.stt.persistence
 
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.FileFileFilter
+import org.apache.commons.io.filefilter.FileFilterUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -66,7 +67,7 @@ class BackupCreatorTest {
 
         // THEN
         val files = FileUtils.listFiles(currentTempFolder!!,
-                FileFileFilter.FILE, null)
+            FileFilterUtils.fileFileFilter(), null)
 
         assertThat(1).isEqualTo(files.size.toLong())
         assertThat(files).first().isEqualTo(backedUp.absoluteFile)
