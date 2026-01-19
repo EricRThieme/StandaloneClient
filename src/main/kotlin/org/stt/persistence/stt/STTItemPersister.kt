@@ -20,13 +20,13 @@ constructor(@param:STTFile val readerProvider: Provider<Reader>,
 
     private val converter = STTItemConverter()
 
-    override fun persist(itemToInsert: TimeTrackingItem) {
+    override fun persist(item: TimeTrackingItem) {
         val stringWriter = StringWriter()
         val providedReader: Reader = readerProvider.get()
         try {
             STTItemReader(providedReader).use { `in` ->
                 STTItemWriter(stringWriter).use { out ->
-                    InsertHelper(`in`, out, itemToInsert).performInsert()
+                    InsertHelper(`in`, out, item).performInsert()
                 }
                 rewriteFileWith(stringWriter.toString())
             }
