@@ -21,7 +21,7 @@ plugins {
     id("org.openjfx.javafxplugin") version "0.1.0"
 
     id("org.javamodularity.moduleplugin") version "2.0.0"
-    id("org.beryx.jlink") version "3.0.1"
+    id("org.beryx.jlink") version "3.1.5"
 
     id("com.palantir.git-version") version "4.2.0"
 }
@@ -52,16 +52,16 @@ java {
     sourceCompatibility = JavaVersion.VERSION_21
 }
 
-kapt {
-    correctErrorTypes = true
-}
-
-configurations {
-    implementation {
-        setExtendsFrom(extendsFrom.filter { it != configurations.antlr })
+    java {
+        // workaround, to make kapt created classes available to java module source set
+        sourceSets {
+            main {
+                java {
+                    srcDir(layout.buildDirectory.dir("generated/source/kapt/main"))
+                }
+            }
+        }
     }
-}
-
 val spek_version = "2.0.4"
 
 dependencies {
@@ -110,9 +110,9 @@ tasks.compileJava {
     // workaround, to make kapt created classes available to java module source set
     sourceSets {
         main {
-            java {
-                srcDir("$buildDir/generated/source/kapt/main")
-            }
+                java {
+                    srcDir(layout.buildDirectory.dir("generated/source/kapt/main").get().asFile)
+                }
         }
     }
 }
@@ -149,13 +149,12 @@ tasks.withType<ProcessResources> {
     }
 }
 
-task("dist") {
-    dependsOn += "jpackage"
-    dependsOn += "jlinkZip"
+tasks.register("dist") {
+    dependsOn("jpackage", "jlinkZip")
 }
 
-task("release") {
-    dependsOn += "dist"
+tasks.register("release") {
+    dependsOn("dist")
     doLast {
         println("Built release for ${resolvedAppVersion}")
     }
@@ -186,7 +185,7 @@ tasks.withType<KotlinCompile>().configureEach {
 //}
 
 jlink {
-    imageZip.set(File("$buildDir/dist/zips/stt-${javafx.platform.classifier}-${version}.zip"))
+    imageZip.set(layout.buildDirectory.file("dist/zips/stt-${javafx.platform.classifier}-${version}.zip"))
     addOptions("--bind-services", "--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
     mergedModule {
         excludeRequires("javafx.graphics", "javafx.controls", "javafx.base")
@@ -205,7 +204,7 @@ jlink {
             )
     }
     jpackage {
-        installerOutputDir = File( "$buildDir/dist/installer/${javafx.platform.classifier}")
+        installerOutputDir = layout.buildDirectory.dir("dist/installer/${javafx.platform.classifier}").get().asFile
         skipInstaller = false
         appVersion = upcomingVersion
 
