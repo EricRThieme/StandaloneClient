@@ -68,8 +68,12 @@ class CommandTextParser(private val formatters: List<DateTimeFormatter>) {
         }
 
         override fun visitTimeFormat(ctx: EnglishCommandsParser.TimeFormatContext): Array<LocalDateTime?> {
-            return super.visitTimeFormat(ctx) as? Array<LocalDateTime?>
-                    ?: return arrayOf(LocalDateTime.now(), null)
+            val result = super.visitTimeFormat(ctx)
+            if (result is Array<*>) {
+                // map elements safely to LocalDateTime?
+                return result.map { it as? LocalDateTime }.toTypedArray()
+            }
+            return arrayOf(LocalDateTime.now(), null)
         }
 
         override fun visitItemWithComment(ctx: EnglishCommandsParser.ItemWithCommentContext): Any {

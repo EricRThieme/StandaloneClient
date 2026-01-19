@@ -32,8 +32,15 @@ class JiraClient(private var username: String?, private var password: String?, p
         this.restClient?.send(request, HttpResponse.BodyHandlers.ofString())?.let {
             if (it.statusCode() == 200) {
             val deserializedAsMap = JsonIterator.deserialize(it.body(), Map::class.java)
-            val fields = deserializedAsMap["fields"] as Map<String, String>
-            return Issue(fields["summary"])
+            val fieldsAny = deserializedAsMap["fields"]
+            val fields = when (fieldsAny) {
+              is Map<*, *> -> fieldsAny
+              else -> null
+            }
+            val summary = fields?.get("summary") as? String
+            if (summary != null) {
+              return Issue(summary)
+            }
           }
           handleHttpError(it, issueKey)
         }

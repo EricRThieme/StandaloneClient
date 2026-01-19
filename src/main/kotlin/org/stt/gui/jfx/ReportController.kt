@@ -304,6 +304,7 @@ internal constructor(private val localization: ResourceBundle,
 
     private fun addClickToCopy(column: TableColumn<ReportListItem, String>, clickHandler: BiConsumer<ReportListItem, MouseEvent>) {
         column.setCellFactory { param ->
+            @Suppress("UNCHECKED_CAST") // default factory returns TableCell<ReportListItem, String> at runtime
             val tableCell = TableColumn.DEFAULT_CELL_FACTORY.call(param) as TableCell<ReportListItem, String>
             tableCell.setOnMouseClicked { event ->
                 val item = tableCell.tableRow.item ?: return@setOnMouseClicked
