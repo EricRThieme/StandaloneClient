@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.internal.KaptTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.javamodularity.moduleplugin.extensions.TestModuleOptions
 import org.gradle.internal.os.OperatingSystem
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 
 plugins {
@@ -16,6 +17,8 @@ plugins {
     kotlin("kapt") version kotlinVersion
     id("org.sonarqube") version "5.1.0.4882"
     id("com.github.ben-manes.versions") version "0.36.0"
+
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 
     id("org.openjfx.javafxplugin") version "0.1.0"
 
@@ -223,5 +226,23 @@ jlink {
             icon = "src/main/resources/Logo.icns"
         }
     }
+}
+
+// Configure Shadow plugin to produce an executable fat JAR
+tasks.register<ShadowJar>("fatJar") {
+    archiveBaseName.set("STT")
+    archiveClassifier.set("")
+    archiveVersion.set(project.version.toString())
+    manifest {
+        attributes(mapOf("Main-Class" to "org.stt.StartWithJFX"))
+    }
+    // include project classes and all runtime dependencies
+    from(sourceSets.main.get().output)
+    configurations = listOf(project.configurations.getByName("runtimeClasspath"))
+}
+
+// Make the standard 'assemble' depend on our fatJar so it's created with regular build if desired
+tasks.named("assemble") {
+    dependsOn("fatJar")
 }
 

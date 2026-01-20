@@ -58,9 +58,18 @@ to start hacking on STT:
 ```bash
 git clone https://github.com/SimpleTimeTracking/StandaloneClient.git
 cd StandaloneClient
-gradlew build
+./gradlew build
 ```
 The created fat jar can be found in build/libs
+
+If you need a single runnable JAR (contains dependencies) you can build a fat JAR with the Shadow plugin:
+
+```bash
+./gradlew clean fatJar
+java -jar build/libs/STT-<version>.jar
+```
+
+Note: The project also provides platform-native distributions via `jlink`/`jpackage` (task `dist`) used by CI; use `./gradlew dist` to produce installers or zipped images.
 
 # License
 
