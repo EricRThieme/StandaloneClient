@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.internal.KaptTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.javamodularity.moduleplugin.extensions.TestModuleOptions
+import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
@@ -228,3 +229,28 @@ jlink {
         }
     }
 }
+
+tasks.register<Jar>("fatJar") {
+    archiveBaseName.set("STT")
+    archiveVersion.set(project.version.toString())
+    archiveClassifier.set("")
+    manifest {
+        attributes(mapOf("Main-Class" to "org.stt.StartWithJFX"))
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(sourceSets.main.get().output)
+    // include runtime dependencies unpacked
+    dependsOn(configurations.runtimeClasspath)
+    doFirst {
+        val libs = configurations.runtimeClasspath.get().filter { it.name.endsWith(".jar") }
+        libs.forEach { file ->
+            from(zipTree(file))
+        }
+    }
+}
+
+// Make the standard 'assemble' depend on our fatJar so it's created with regular build if desired
+tasks.named("assemble") {
+    dependsOn("fatJar")
+}
+
