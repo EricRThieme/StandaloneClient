@@ -14,6 +14,7 @@ module org.stt {
     requires java.compiler;
     requires mbassador;
     requires jsoniter;
+    requires org.yaml.snakeyaml;
     requires org.controlsfx.controls;
     requires org.fxmisc.richtext;
     requires org.antlr.antlr4.runtime;
