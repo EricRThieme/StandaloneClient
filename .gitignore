@@ -13,3 +13,5 @@ build
 
 # local environment overrides
 .env
+.DS_Store
+project.md
