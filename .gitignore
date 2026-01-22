@@ -16,3 +16,4 @@ build
 .vscode/settings.json
 .gitignore
 .DS_Store
+project.md
