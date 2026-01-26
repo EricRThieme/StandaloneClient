@@ -63,17 +63,6 @@ cd STT
 ./gradlew build
 ```
 
-If you have multiple JDKs installed or want to specify a local JDK for Gradle without changing global environment
-variables, you can use the included helper script. The repository contains a `.env.example` file; copy it to `.env`
-and set `ORG_GRADLE_JAVA_HOME` or `JAVA_HOME` there. The `gradle-build.sh` script will read `.env` and pass the
-value as `-Dorg.gradle.java.home` to the Gradle wrapper.
-
-Example:
-```bash
-cp .env.example .env
-# edit .env and set ORG_GRADLE_JAVA_HOME=/path/to/jdk
-./gradle-build.sh clean build --no-daemon --info
-```
 The created fat jar can be found in build/libs
 
 # License
