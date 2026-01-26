@@ -80,7 +80,7 @@ public class HighlightingOverlay {
 
         // Merge adjacent/overlapping highlights of the same color
         for (Highlight h : highlights) {
-            if (h.color != null && h.color.equals(highlight.color) && (h.end + 1 >= highlight.start && h.start - 1 <= highlight.end)) {
+            if (h.color != null && h.color.equals(highlight.color) && h.end + 1 >= highlight.start && h.start - 1 <= highlight.end) {
                 // merge ranges
                 children.remove(h.rectangle);
                 h.start = Math.min(h.start, highlight.start);
