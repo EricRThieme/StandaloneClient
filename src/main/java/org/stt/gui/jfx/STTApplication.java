@@ -528,6 +528,50 @@ public class STTApplication implements DeleteActionHandler, EditActionHandler,
             commandText.textProperty().bindBidirectional(currentCommand);
             result.setItems(filteredList);
             bindItemSelection();
+
+            // When TAB is pressed in the command text, move focus to the result list
+            commandText.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent event) {
+                    if (KeyCode.TAB.equals(event.getCode())) {
+                        event.consume();
+                        if (!result.getItems().isEmpty()) {
+                            result.requestFocus();
+                            if (result.getSelectionModel().getSelectedIndex() < 0) {
+                                result.getSelectionModel().selectFirst();
+                            }
+                        }
+                    }
+                }
+            });
+
+            // When the result list has focus, Enter should copy the selected item's text
+            // into the command text and return focus to the editor. Tab returns focus.
+            result.setOnKeyPressed(new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent event) {
+                    if (KeyCode.ENTER.equals(event.getCode())) {
+                        TimeTrackingItem sel = result.getSelectionModel().getSelectedItem();
+                        if (sel != null && sel.getComment().isPresent()) {
+                            event.consume();
+                            textOfSelectedItem(sel.getComment().get());
+                        }
+                    } else if (KeyCode.TAB.equals(event.getCode())) {
+                        event.consume();
+                        requestFocusOnCommandText();
+                    }
+                }
+            });
+
+            // Ensure a row is selected when the list gains focus so the selection is visible
+            result.focusedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    if (newValue && result.getSelectionModel().getSelectedIndex() < 0 && !result.getItems().isEmpty()) {
+                        result.getSelectionModel().selectFirst();
+                    }
+                }
+            });
         }
 
         private void bindItemSelection() {

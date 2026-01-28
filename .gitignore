@@ -13,3 +13,6 @@ build
 
 # local environment overrides
 .env
+.vscode/settings.json
+.gitignore
+.DS_Store
