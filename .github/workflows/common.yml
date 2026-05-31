@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ inputs.checkout-ref != '' && inputs.checkout-ref || github.ref }}
+          ref: ${{ inputs.checkout-ref || github.ref }}
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
