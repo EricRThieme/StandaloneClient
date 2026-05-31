@@ -1,8 +1,5 @@
-name: Build STT on Push to dev
-on:
-  push:
-    branches:
-      - dev
+name: Build STT on Push
+on: push
 permissions:
   contents: read
 
