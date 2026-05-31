@@ -1,5 +1,7 @@
 name: Build STT on Push
 on: push
+permissions:
+  contents: read
 jobs:
   build-with-common:
     strategy:
