@@ -1,0 +1,17 @@
+name: Build STT Dev (weekly)
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build-dev:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    uses: ./.github/workflows/common.yml
+    with:
+      runs-on: ${{ matrix.os }}
+      gradle-tasks: dist
+      checkout-ref: dev
