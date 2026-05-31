@@ -7,17 +7,14 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.util.Base64
 
-class JiraClient(private var username: String?, private var password: String?, private var jiraUrl: String) {
+class JiraClient(
+    private var username: String?,
+    private var password: String?,
+    private var jiraUrl: String,
+    httpClient: HttpClient? = null
+) {
     private val restApiV3 = "rest/api/3"
-    private var restClient: HttpClient? = null
-
-    init {
-        this.restClient = getJiraRestClient()
-    }
-
-    private fun getJiraRestClient(): HttpClient? {
-        return HttpClient.newBuilder().build()
-    }
+    private var restClient: HttpClient? = httpClient ?: HttpClient.newBuilder().build()
 
 
     fun getIssue(issueKey: String): Issue? {
